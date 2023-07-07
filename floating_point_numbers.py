@@ -82,14 +82,15 @@ class floating():
         temp_mantissa = (256+int(self.mantissa, base=2))*(256+int(other.mantissa, base=2))
         if temp_mantissa >= 1<<17:
             temp_exp = bin(int(self.exp, base=2)+int(other.exp, base=2)-14)[2:]
-            temp_mantissa = bin(temp_mantissa)[3:11]
         else:
             temp_exp = bin(int(self.exp, base=2)+int(other.exp, base=2)-15)[2:]
-            temp_mantissa = bin(temp_mantissa)[3:11]
+        temp_mantissa = bin(temp_mantissa)[3:11]
         if len(temp_exp)> 5 or 'b' in temp_exp:
             raise ValueError #This is to make sure that the product doesn't exceed the number system given i.e. become a number that requires more than 14 bits to describe or be smaller than 2^-15
+        elif len(temp_exp)< 5:
+            temp_exp = '0'*(5-len(temp_exp))+temp_exp
         temp.f_setter(temp_sign+ temp_exp+ temp_mantissa)
-        return temp
+        return temp.value()
         
         
 
@@ -113,7 +114,7 @@ def main():
     plt.show()
     
     
-    inp = float(input("What number would you like to conver to a floating point number?: "))
+    inp = float(input("What number would you like to convert to a floating point number?: "))
     conv = convert(inp)
     print('Your converted number is: ', conv)
     print('The floating point value is: ', conv.value())
@@ -124,9 +125,9 @@ def main():
     g.f_setter("00100100101001")
     print(f'f: {f.value()}\ng: {g.value()}')
     r = f*g
-    print("Product: ",r.value(), '\nwhat', r.f_getter())
+    print("Floating Product: ",r, '\nActual Product: ', f.value()*g.value())
     r = f+g
-    print("Sum: ", r)
+    print("Sum: ", r, '\nActual Sum: ', f.value()+g.value())
     r = f-g
-    print("Difference: ", r)
+    print("Difference: ", r, '\nActual Difference: ', f.value()-g.value())
 main()
